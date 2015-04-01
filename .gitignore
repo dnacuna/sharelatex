@@ -1,4 +1,4 @@
-config
+/config
 config-local
 node_modules
 
@@ -6,8 +6,18 @@ web
 document-updater
 clsi
 filestore
+track-changes
+docstore
+tags
+chat
+spelling
+real-time
+migrations/*.js
 
-compiles
-cache
+data
+tmp
 
 db.sqlite
+
+.DS_Store
+.vagrant

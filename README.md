@@ -1,80 +1,42 @@
 ShareLaTeX
 ==========
 
-[ShareLaTeX](https://www.sharelatex.com) is now open source! ShareLaTeX is an online real-time collaborative LaTeX editor, and you can now run your own local version where you can host, edit, collaborate in real-time, and compile your LaTeX documents. We’re still 100% focused on running the hosted version at http://www.sharelatex.com, but we want to be more flexible in how you can use ShareLaTeX, and give something back to our wonderful community.
+[ShareLaTeX](https://www.sharelatex.com) is an open-source online real-time collaborative LaTeX editor. We run a hosted version at http://www.sharelatex.com, but you can also run your own local version, and contribute to the development of ShareLaTeX.
 
-**[Read more on our blog](https://www.sharelatex.com/blog/2014/02/21/sharelatex-is-now-open-source.html#.UwcnsEJ_ugc)**
+*[If you want help installing and maintaining ShareLaTeX at your university or workplace, we offer an officially supported version called ShareLaTeX Server Pro. It also comes with extra security and admin features. Click here to find out more!](https://www.sharelatex.com/university/onsite.html)*
 
 Installation
 ------------
 
-ShareLaTeX uses a service oriented architecture (SOA) where we have lots of small
-APIs that talk to each other over HTTP and Redis pub-sub channels. This repository
-pulls together all of the different services and allows you to set up and run
-them quickly.
+We have detailed installation instructions in our wiki:
 
-First, check out a local copy of this repository:
+* [Installing ShareLaTeX in Production](https://github.com/sharelatex/sharelatex/wiki/Production-Installation-Instructions)
+* [Setting up a ShareLaTeX Development Environment](https://github.com/sharelatex/sharelatex/wiki/Setting-up-a-Development-Environment)
 
-```bash
-git clone https://github.com/sharelatex/sharelatex.git
-cd sharelatex
-```
+**If you have any problems, have a look at our page of [Frequent Problems and Questions](https://github.com/sharelatex/sharelatex/wiki/FAQ).**
 
-Next install all the node modules and ShareLaTeX services:
+Upgrading
+---------
 
-```bash
-npm install
-grunt install
-```
+If you are upgrading from a previous version of ShareLaTeX, please see the [Release Notes section on the Wiki] (https://github.com/sharelatex/sharelatex/wiki/Home) for all of the versions between your current version and the version you are upgrading to.
 
-This will create a config file in `config/settings.development.coffee`. You should open
-this now and configure your AWS S3 credentials, and other custom settings.
-
-Now check that your system is set up correctly to run ShareLaTeX (checks that you have
-the required dependencies installed.) Watch out for any failures.
-
-```bash
-grunt check --force
-```
-
-When that has finished, run ShareLaTeX with
-
-```bash
-grunt run
-```
-
-ShareLaTeX should now be running at http://localhost:3000.
 
 Dependencies
 ------------
 
 ShareLaTeX should run on OS X and Linux. You need:
 
-* [Node.js](http://nodejs.org/) 0.10 or greater. We recommend that you use [nvm](https://github.com/creationix/nvm) to install it.
+* [Node.js](http://nodejs.org/) 0.10.x. We recommend that you use [nvm](https://github.com/creationix/nvm) to install it.
 * The [grunt](http://gruntjs.com/) command line tools (Run `npm install -g grunt-cli` to install them)
-* A local instance of [Redis](http://redis.io/) (version 2.6 or later) and [MongoDB](http://www.mongodb.org/) running on their standard ports.
+* A local instance of [Redis](http://redis.io/topics/quickstart) (version 2.6.12 or later) and [MongoDB](http://docs.mongodb.org/manual/installation/) running on their standard ports.
 * [TeXLive](https://www.tug.org/texlive/) 2013 or later with the `latexmk` program installed.
 
-Config
-------
-
-ShareLaTeX should mostly run out of the box, although it uses Amazon S3 for storing binary
-files like images. You will need to configure ShareLaTeX to use your own S3 access key
-which can be done by editing the file at `config/settings.development.coffee`
-
-A local settings file can be specified by setting the `SHARELATEX_CONFIG` environment variable
-to point to your own settings file. E.g.
-
-```bash
-export SHARELATEX_CONFIG=/home/james/config/settings.development.coffee
-```
+ShareLaTeX needs a minimum of 2gb of memory, it is likely to be more than that though depending on usage.
 
 Other repositories
 ------------------
 
-ShareLaTeX consists of many separate services, each with their own Node.js process
-and source code repository. These are all downloaded and set upwhen you run
-`grunt install`
+This repository does not contain any code. It acts a wrapper and toolkit for managing the many different ShareLaTeX  services. These each run as their own Node.js process and have their own Github repository. These are all downloaded and set up when you run `grunt install`
 
 The different services are:
 
@@ -96,10 +58,37 @@ modifications.
 The Common LaTeX Service Interface (CLSI) which provides an API for compiling LaTeX 
 documents.
 
+### [docstore](https://github.com/sharelatex/docstore-sharelatex) [![Build Status](https://travis-ci.org/sharelatex/docstore-sharelatex.png?branch=master)](https://travis-ci.org/sharelatex/docstore-sharelatex)
+
+An API for performing CRUD (Create, Read, Update and Delete) operations on text files
+stored in ShareLaTeX.
+
 ### [filestore](https://github.com/sharelatex/filestore-sharelatex) [![Build Status](https://travis-ci.org/sharelatex/filestore-sharelatex.png?branch=master)](https://travis-ci.org/sharelatex/filestore-sharelatex)
 
 An API for performing CRUD (Create, Read, Update and Delete) operations on binary files
 (like images) stored in ShareLaTeX.
+
+### [track-changes](https://github.com/sharelatex/track-changes-sharelatex) [![Build Status](https://travis-ci.org/sharelatex/track-changes-sharelatex.png?branch=master)](https://travis-ci.org/sharelatex/track-changes-sharelatex)
+
+An API for compressing and storing the updates applied to a document, and then rendering a diff of the changes
+between any two time points.
+
+### [chat](https://github.com/sharelatex/chat-sharelatex) [![Build Status](https://travis-ci.org/sharelatex/chat-sharelatex.png?branch=master)](https://travis-ci.org/sharelatex/chat-sharelatex)
+
+The backend API for storing and fetching chat messages.
+
+### [tags](https://github.com/sharelatex/tags-sharelatex) [![Build Status](https://travis-ci.org/sharelatex/tags-sharelatex.png?branch=master)](https://travis-ci.org/sharelatex/tags-sharelatex)
+
+The backend API for managing project tags (folders).
+
+### [spelling](https://github.com/sharelatex/spelling-sharelatex)
+
+An API for running server-side spelling checking on ShareLaTeX documents.
+
+Dropbox
+-------
+
+Please note that certain features like Dropbox integration are not functional in the open source code base yet, despite appearing in the user interface. We're working on this, sorry!
 
 Contributing
 ------------
